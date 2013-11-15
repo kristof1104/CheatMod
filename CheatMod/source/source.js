@@ -41,7 +41,6 @@
 					VisualsManager.addComputer(character);
 					VisualsManager.refreshHiringButtons();
 					VisualsManager.refreshTrainingOverlays();
-					alert(GameManager.company.staff.length);
 		}
 		
 		2 < GameManager.company.staff.length && GameManager.enableMediumContracts();
