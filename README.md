@@ -5,10 +5,10 @@ Using this mod is a safer method then changing the save game directly with an ed
 
 Currently (version 0.1.1)
 Features:
-	- Add Money
+    - Add Money
 	- Add ResearchPoints
-	- Add Fans
-	- Add DreamTeam (Fills in all open team spots with pro-level Game-designers)
+    - Add Fans
+    - Add DreamTeam (Fills in all open team spots with pro-level Game-designers)
 	
 	
 How to add CheatMod to your Game Dev Tycoon:
@@ -34,7 +34,7 @@ How to add CheatMod to your Game Dev Tycoon:
 	In the main menu open up the mods screen.
 	Select Cheatmod and reboot Game Dev Tycoon.
 	
-Now when you add left click a new option called "cheatmode..." is added.
+Now when you press the left mouse button a new option called "cheatmode..." is added.
 
 That's it :)
 For questions or feedback
