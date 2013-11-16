@@ -20,7 +20,7 @@ New Features:
 	
 version 0.1.4
 New Features:
-    - Move in Time function, you can now goto any year in the game
+    - Move in Time function, you can now goto any date in the game
 	
 	
 How to add CheatMod to your Game Dev Tycoon:
