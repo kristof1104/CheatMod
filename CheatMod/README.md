@@ -3,12 +3,17 @@
 This is a mod for Game Dev Tycoon, it enables users to use cheats through an in-game menu.
 Using this mod is a safer method then changing the save game directly with an editor.
 
-Currently (version 0.1.1)
+version 0.1.1
 Features:
     - Add Money
 	- Add ResearchPoints
     - Add Fans
     - Add DreamTeam (Fills in all open team spots with pro-level Game-designers)
+	
+version 0.1.2
+New Features:
+    - Goto last level of Game Dev tycoon (Hardware and RnD lab included)
+	
 	
 	
 How to add CheatMod to your Game Dev Tycoon:
