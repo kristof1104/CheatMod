@@ -18,6 +18,10 @@ version 0.1.3
 New Features:
     - Add AAA research
 	
+version 0.1.4
+New Features:
+    - Move in Time function, you can now goto any year in the game
+	
 	
 How to add CheatMod to your Game Dev Tycoon:
 

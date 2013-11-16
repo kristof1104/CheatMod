@@ -1,6 +1,8 @@
 ﻿var CheatModKristof1104 = {};
 (function () {
 
+	var new_date = 0;
+
 	function addDreamTeam(){
 		for (var i=1;i<GameManager.company.maxStaff;i++){
 		var skipCharacter = false;
@@ -131,6 +133,7 @@
 	}	
 	function addMoney(){
 		GameManager.company.adjustCash(1000000,"cheat mode 1M");
+		alert(GameManager.company.currentWeek);
 	}
 	
 	function addResearchPoints(){
@@ -151,8 +154,7 @@
 			GameManager.company.researchCompleted.push(Research.AAA);
 		}
 	}
-	
-	
+
 	var div = $("body");
 	div.append('<div id="CheatContainer" class="windowBorder notificationThreeOptions" style="height: 650px;display:none;"></div>');
 	div = $("#CheatContainer");
@@ -162,6 +164,9 @@
 	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Move To Final level</div>');
 	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Add AAA games</div>');
+	div.append('<div id="cheatmod_date" style="width: 450px"></div>');
+	div.append('<div class="volumeSlider"></div>');
+	div.append('<div id="moveToDate" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Move To Date</div>');
 	
 	UI.pickCheatClick = function (a) {
 		Sound.click();
@@ -184,10 +189,33 @@
 			case "AAAResearch":
                 addAAAResearch();
 				break;
+			case "moveToDate":
+                moveToDate();
+				break;
             default:
                 return;
             }
 	}
+	
+	function moveToDate(){
+		GameManager.gameTime = new_date * (GameManager.SECONDS_PER_WEEK * 1E3);
+		//GameManager.company.currentWeek = GameManager.gameTime;
+		General.proceedOneWeek(GameManager.company,new_date);
+	}	
+	
+	function setDate(d){
+		new_date = d
+		
+		 var a = Math.floor(d) % 4 + 1;
+		 var c = Math.floor(d) / 4;
+         var b = c / 12 + 1;
+         var year = Math.floor(b);
+         var month = Math.floor(c % 12 + 1);
+         var week = Math.floor(a);
+        
+		var div = $("#CheatContainer");
+		div.find("#cheatmod_date").html(year+"Y " + month + "M " + week + "W");
+	}	
 	
 	var original_showContextMenu = UI._showContextMenu;
 	var new_showContextMenu = function(b, c, d, h){
@@ -207,6 +235,21 @@
 						})
                 }
             })
+			
+			
+			//test slider
+			div.find(".volumeSlider").slider({
+            min: 0,
+            max: 2160,
+            range: "min",
+            value: Math.floor(GameManager.company.currentWeek),
+            animate: !1,
+            slide: function (a, b) {
+                var c = b.value;
+                setDate(c);
+            }
+        });
+		setDate(GameManager.company.currentWeek);
 			
 		original_showContextMenu(b, c, d, h);
 	};
