@@ -140,17 +140,28 @@
 	
 	function addFans(){
 		GameManager.company.fans += 1000000;
+	}	
+	function addAAAResearch(){
+		if(GameManager.company.researchCompleted.indexOf(Research.MediumSizeGames) == -1){
+			GameManager.company.notifications.push(new Notification("CheatMod", "To Add AAA games, you need to have medium games researched"));
+			return;
+		}
+	
+		if(-1 == GameManager.company.researchCompleted.indexOf(Research.AAA)){
+			GameManager.company.researchCompleted.push(Research.AAA);
+		}
 	}
 	
 	
 	var div = $("body");
-	div.append('<div id="CheatContainer" class="windowBorder notificationThreeOptions" style="height: 600px;display:none;"></div>');
+	div.append('<div id="CheatContainer" class="windowBorder notificationThreeOptions" style="height: 650px;display:none;"></div>');
 	div = $("#CheatContainer");
 	div.append('<div id="money" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px;" >Add Money (1M)</div>');
 	div.append('<div id="research" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px;">Add Research Points (100pt)</div>');
 	div.append('<div id="fans" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px;">Add Fans (1M)</div>');
 	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Move To Final level</div>');
+	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Add AAA games</div>');
 	
 	UI.pickCheatClick = function (a) {
 		Sound.click();
@@ -169,6 +180,9 @@
 				break;
 			case "moveToLvl4":
                 moveToLevel4();
+				break;
+			case "AAAResearch":
+                addAAAResearch();
 				break;
             default:
                 return;

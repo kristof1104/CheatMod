@@ -13,7 +13,10 @@ Features:
 version 0.1.2
 New Features:
     - Goto last level of Game Dev tycoon (Hardware and RnD lab included)
-	
+
+version 0.1.3
+New Features:
+    - Add AAA research
 	
 	
 How to add CheatMod to your Game Dev Tycoon:
