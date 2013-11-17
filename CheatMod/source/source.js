@@ -133,7 +133,6 @@
 	}	
 	function addMoney(){
 		GameManager.company.adjustCash(1000000,"cheat mode 1M");
-		alert(GameManager.company.currentWeek);
 	}
 	
 	function addResearchPoints(){
