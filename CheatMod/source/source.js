@@ -1,8 +1,15 @@
 ﻿var CheatModKristof1104 = {};
 (function () {
-
 	var new_date = 0;
 
+	function removeNeedForVacationForStaff(){
+			for(var i=0;i<GameManager.company.staff.length;i++){
+				var character = GameManager.company.staff[i];
+					character.flags.nextVacation = 2700 * (GameManager.SECONDS_PER_WEEK * 1E3);; // more then 40 years :)
+					character.flags.needsVacation = false;
+			}
+	}
+	
 	function addDreamTeam(){
 		for (var i=1;i<GameManager.company.maxStaff;i++){
 		var skipCharacter = false;
@@ -131,8 +138,8 @@
 			GameManager.resume(true);
 		}
 	}	
-	function addMoney(){
-		GameManager.company.adjustCash(1000000,"cheat mode 1M");
+	function addMoney(money){
+		GameManager.company.adjustCash(money,"cheat mode " + money / 1000000 + "M");
 	}
 	
 	function addResearchPoints(){
@@ -155,23 +162,36 @@
 	}
 
 	var div = $("body");
-	div.append('<div id="CheatContainer" class="windowBorder notificationThreeOptions" style="height: 650px;display:none;"></div>');
+	div.append('<div id="CheatContainer" class="windowBorder tallWindow" style="overflow:auto;display:none;"> <div id="cheatmodtop" class="windowTitle smallerWindowTitle">CheatMod</div>');
 	div = $("#CheatContainer");
-	div.append('<div id="money" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px;" >Add Money (1M)</div>');
-	div.append('<div id="research" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px;">Add Research Points (100pt)</div>');
-	div.append('<div id="fans" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px;">Add Fans (1M)</div>');
-	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
-	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Move To Final level</div>');
-	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Add AAA games</div>');
-	div.append('<div id="cheatmod_date" style="width: 450px"></div>');
+	div.append('<div id="moneylbl" style="margin-left:50px;width: 450px;" >Add Money</div>');
+	div.append('<div id="money1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 142px;" >Add 1M</div>');
+	div.append('<div id="money10M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 10M</div>');
+	div.append('<div id="money100M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 100M</div>');
+	div.append('<div id="research" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Research Points (100pt)</div>');
+	div.append('<div id="fans" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Fans (1M)</div>');
+	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
+	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Final level</div>');
+	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add AAA games</div>');
+	div.append('<div id="removeNeedForVacationForStaff" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Remove need for staff vacation</div>');
+	
+	div.append('<div id="cheatmodtop" class="windowTitle smallerWindowTitle">Experimental!</div>');
+	div.append('<div style="margin-left:50px;width: 450px">Move through time, only use this for mod development/testing!(Moving back in time can add double platforms, moving in the future should work fine!</div>');
+	div.append('<div id="cheatmod_date" style="text-align:center;margin-left:50px;width: 450px"></div>');
 	div.append('<div class="volumeSlider"></div>');
-	div.append('<div id="moveToDate" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="width: 450px">Move To Date</div>');
+	div.append('<div id="moveToDate" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Date</div>');
 	
 	UI.pickCheatClick = function (a) {
 		Sound.click();
 		switch (a.id) {
-            case "money":
-                addMoney();
+            case "money1M":
+                addMoney(1000000);
+				break;
+            case "money10M":
+                addMoney(10000000);
+				break;
+            case "money100M":
+                addMoney(100000000);
 				break;
             case "research":
                 addResearchPoints();
@@ -190,6 +210,9 @@
 				break;
 			case "moveToDate":
                 moveToDate();
+				break;
+			case "removeNeedForVacationForStaff":
+                removeNeedForVacationForStaff();
 				break;
             default:
                 return;
@@ -228,13 +251,19 @@
 					GameManager.resume(true);
 					
 						 var div = $("#CheatContainer");
+						 
+						 div.scrollTop()
+						 
 						 div.gdDialog({
 							popout: !0,
 							close: !0
 						})
                 }
             })
-			
+
+			div.animate({
+				scrollTop: $("#cheatmodtop").offset().top
+			}, 2000);
 			
 			//test slider
 			div.find(".volumeSlider").slider({

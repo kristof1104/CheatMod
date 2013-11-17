@@ -25,6 +25,11 @@ New Features:
 version 0.1.5
 Bug-fix:
     - Fixed bug in version 0.1.4 (when adding money an debug alert was displayed)
+		
+version 0.1.6
+New Features:
+    - Money can now be added By 1M, 10M, 20M
+	- Staff members don't need Vacation.
 	
 How to add CheatMod to your Game Dev Tycoon:
 
