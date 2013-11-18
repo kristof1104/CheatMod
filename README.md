@@ -31,6 +31,10 @@ New Features:
     - Money can now be added By 1M, 10M, 20M
 	- Staff members don't need Vacation.
 	
+version 0.1.7
+BugFix:
+	- Works with latest Game Dev Tycoon Version
+	
 How to add CheatMod to your Game Dev Tycoon:
 
 	
