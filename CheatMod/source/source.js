@@ -1,6 +1,7 @@
 ﻿var CheatModKristof1104 = {};
 (function () {
 	var new_date = 0;
+	var perfectScores = false;
 
 	function removeNeedForVacationForStaff(){
 			for(var i=0;i<GameManager.company.staff.length;i++){
@@ -150,6 +151,11 @@
 	function addFans(){
 		GameManager.company.fans += 1000000;
 	}	
+	
+	function addHype(){
+		GameManager.company.adjustHype(GameManager.company.currentGame.hypePoints + 100);
+	}	
+	
 	function addAAAResearch(){
 		if(GameManager.company.researchCompleted.indexOf(Research.MediumSizeGames) == -1){
 			GameManager.company.notifications.push(new Notification("CheatMod", "To Add AAA games, you need to have medium games researched"));
@@ -170,10 +176,12 @@
 	div.append('<div id="money100M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 100M</div>');
 	div.append('<div id="research" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Research Points (100pt)</div>');
 	div.append('<div id="fans" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Fans (1M)</div>');
+	div.append('<div id="hype" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Hype (100pt)</div>');
 	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Final level</div>');
 	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add AAA games</div>');
 	div.append('<div id="removeNeedForVacationForStaff" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Remove need for staff vacation</div>');
+	div.append('<div id="setPerfectScoreEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Always have PerfectScores</div>');
 	
 	div.append('<div id="cheatmodtop" class="windowTitle smallerWindowTitle">Experimental!</div>');
 	div.append('<div style="margin-left:50px;width: 450px">Move through time, only use this for mod development/testing!(Moving back in time can add double platforms, moving in the future should work fine!</div>');
@@ -214,6 +222,12 @@
 			case "removeNeedForVacationForStaff":
                 removeNeedForVacationForStaff();
 				break;
+			case "hype":
+                addHype();
+				break;
+			case "setPerfectScoreEnabled":
+                setPerfectScoreEnabled();
+				break;
             default:
                 return;
             }
@@ -236,15 +250,13 @@
          var week = Math.floor(a);
         
 		var div = $("#CheatContainer");
-		div.find("#cheatmod_date").html(year+"Y " + month + "M " + week + "W");
+		div.find("#cheatmod_date").html("Y" + year + " M" + month  + " W" + week);
 	}	
 	
 	var original_showContextMenu = UI._showContextMenu;
 	var new_showContextMenu = function(b, c, d, h){
 		//add your custom code
-		GameManager.isIdle() && (!GameManager.currentEngineDev && 0 < GameManager.company.staff.filter(function (a) {
-            return a.state === CharacterState.Idle
-        }).length) && c.push({
+		c.push({
                 label: "CheatMode...",
                 action: function () {
                     Sound.click();
@@ -282,4 +294,36 @@
 		original_showContextMenu(b, c, d, h);
 	};
 	UI._showContextMenu = new_showContextMenu
+	
+	
+	//always perfect scores easy way
+	var getPerfectScoreComment = function(){
+		return ["A masterpiece.".localize(), "Best of its kind.".localize(), "Truly great.".localize(), "Everyone loves it!".localize(), "Must have!".localize(), "Outstanding achievement.".localize(), "Awesome!".localize(), "My new favorite!".localize()].pickRandom();
+	}
+	
+	var setPerfectScores = function (e) {
+		e.reviews[0].score = 10;
+		e.reviews[0].message = getPerfectScoreComment;
+		e.reviews[1].score = 10;
+		e.reviews[1].message = getPerfectScoreComment;
+		e.reviews[2].score = 10;
+		e.reviews[2].message = getPerfectScoreComment;
+		e.reviews[3].score = 10;
+		e.reviews[3].message = getPerfectScoreComment;
+		e.game.score = 10;
+	};
+	
+	var setPerfectScoreEnabled = function(){
+		if(perfectScores){
+			GDT.off(GDT.eventKeys.gameplay.afterGameReview, setPerfectScores);
+			var div = $("#CheatContainer");
+			div.find("#setPerfectScoreEnabled").html("Activate Always have PerfectScores");
+			perfectScores = false;
+		}else{
+			GDT.on(GDT.eventKeys.gameplay.afterGameReview, setPerfectScores);
+			var div = $("#CheatContainer");
+			div.find("#setPerfectScoreEnabled").html("Deactivate Always have PerfectScores");
+			perfectScores = true;
+		}
+	}
 })();

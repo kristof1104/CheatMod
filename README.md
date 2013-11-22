@@ -28,12 +28,17 @@ Bug-fix:
 		
 version 0.1.6
 New Features:
-    - Money can now be added By 1M, 10M, 20M
+    - Money can now be added By 1M, 10M, 20M.
 	- Staff members don't need Vacation.
 	
 version 0.1.7
 BugFix:
 	- Works with latest Game Dev Tycoon Version
+	
+version 0.1.8
+New Features:
+    - Hype can now be added by 100 points.
+	- Always perfect games mode added.
 	
 How to add CheatMod to your Game Dev Tycoon:
 
