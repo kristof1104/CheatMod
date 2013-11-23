@@ -39,6 +39,12 @@ version 0.1.8
 New Features:
     - Hype can now be added by 100 points.
 	- Always perfect games mode added.
+
+version 0.1.9
+New Features:
+    - Added A No Bugs Mod (No bugs during game creation)
+	- Add All Topics (Research All Topics)
+	
 	
 How to add CheatMod to your Game Dev Tycoon:
 

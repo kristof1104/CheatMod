@@ -2,6 +2,7 @@
 (function () {
 	var new_date = 0;
 	var perfectScores = false;
+	var noBugsMode = false;
 
 	function removeNeedForVacationForStaff(){
 			for(var i=0;i<GameManager.company.staff.length;i++){
@@ -153,7 +154,7 @@
 	}	
 	
 	function addHype(){
-		GameManager.company.adjustHype(GameManager.company.currentGame.hypePoints + 100);
+		GameManager.company.adjustHype(100);
 	}	
 	
 	function addAAAResearch(){
@@ -165,6 +166,11 @@
 		if(-1 == GameManager.company.researchCompleted.indexOf(Research.AAA)){
 			GameManager.company.researchCompleted.push(Research.AAA);
 		}
+	}	
+	
+	function addAllTopics(){
+		GameManager.company.topics = [];
+		GameManager.company.topics = GameManager.company.topics.concat([],Topics.topics);
 	}
 
 	var div = $("body");
@@ -180,8 +186,10 @@
 	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Final level</div>');
 	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add AAA games</div>');
+	div.append('<div id="addAllTopics" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add All Topics</div>');
 	div.append('<div id="removeNeedForVacationForStaff" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Remove need for staff vacation</div>');
 	div.append('<div id="setPerfectScoreEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Always have PerfectScores</div>');
+	div.append('<div id="setNoBugsModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate No Bugs Mode</div>');
 	
 	div.append('<div id="cheatmodtop" class="windowTitle smallerWindowTitle">Experimental!</div>');
 	div.append('<div style="margin-left:50px;width: 450px">Move through time, only use this for mod development/testing!(Moving back in time can add double platforms, moving in the future should work fine!</div>');
@@ -227,6 +235,12 @@
 				break;
 			case "setPerfectScoreEnabled":
                 setPerfectScoreEnabled();
+				break;
+			case "setNoBugsModeEnabled":
+                setNoBugsModeEnabled();
+				break;
+			case "addAllTopics":
+                addAllTopics();
 				break;
             default:
                 return;
@@ -326,4 +340,30 @@
 			perfectScores = true;
 		}
 	}
+	
+	//remove bugs
+	var old_updateCharacters = GameManager.updateCharacters;
+	var new_updateCharacters = function(){
+		if(noBugsMode && (typeof GameManager.company.currentGame!= 'undefined')){
+			GameManager.company.currentGame.bugs = 0;
+		}
+		old_updateCharacters();
+		if(noBugsMode && (typeof GameManager.company.currentGame != 'undefined')){
+			GameManager.company.currentGame.bugs = 0;
+		}
+	}
+	GameManager.updateCharacters = new_updateCharacters
+	
+	var setNoBugsModeEnabled = function(){
+		if(noBugsMode){
+			var div = $("#CheatContainer");
+			div.find("#setNoBugsModeEnabled").html("Activate No Bugs Mode");
+			noBugsMode = false;
+		}else{
+			var div = $("#CheatContainer");
+			div.find("#setNoBugsModeEnabled").html("Deactivate No Bugs Mode");
+			noBugsMode = true;
+		}
+	}
+
 })();
