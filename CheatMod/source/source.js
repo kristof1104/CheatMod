@@ -39,7 +39,7 @@
                     salary: 1,
                     efficiency: 1,
                     slot: i,
-                    sex: 1
+                    sex: ["male", "female"].pickRandom()
 					});
 				
 					GameManager.setBodyAndHead(character);

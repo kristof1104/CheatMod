@@ -51,6 +51,8 @@ BugFixes:
 New Features:
     - Added Fast Research/Training Mode (Research/Training is almost instant)
 	
+version 0.2.1
+	- Female staff members added tot 1337 dreamTeam.
 	
 How to add CheatMod to your Game Dev Tycoon:
 
