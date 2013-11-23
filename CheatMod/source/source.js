@@ -3,6 +3,7 @@
 	var new_date = 0;
 	var perfectScores = false;
 	var noBugsMode = false;
+	var fastResearch = false;
 
 	function removeNeedForVacationForStaff(){
 			for(var i=0;i<GameManager.company.staff.length;i++){
@@ -190,6 +191,7 @@
 	div.append('<div id="removeNeedForVacationForStaff" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Remove need for staff vacation</div>');
 	div.append('<div id="setPerfectScoreEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Always have PerfectScores</div>');
 	div.append('<div id="setNoBugsModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate No Bugs Mode</div>');
+	div.append('<div id="setFastResearchModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Fast Research Mode</div>');
 	
 	div.append('<div id="cheatmodtop" class="windowTitle smallerWindowTitle">Experimental!</div>');
 	div.append('<div style="margin-left:50px;width: 450px">Move through time, only use this for mod development/testing!(Moving back in time can add double platforms, moving in the future should work fine!</div>');
@@ -241,6 +243,9 @@
 				break;
 			case "addAllTopics":
                 addAllTopics();
+				break;
+			case "setFastResearchModeEnabled":
+                setFastResearchEnabled();
 				break;
             default:
                 return;
@@ -344,11 +349,11 @@
 	//remove bugs
 	var old_updateCharacters = GameManager.updateCharacters;
 	var new_updateCharacters = function(){
-		if(noBugsMode && (typeof GameManager.company.currentGame!= 'undefined')){
+		if(noBugsMode && typeof GameManager.company.currentGame != 'undefined' && GameManager.company.currentGame != null){
 			GameManager.company.currentGame.bugs = 0;
 		}
 		old_updateCharacters();
-		if(noBugsMode && (typeof GameManager.company.currentGame != 'undefined')){
+		if(noBugsMode && typeof GameManager.company.currentGame != 'undefined' && GameManager.company.currentGame != null){
 			GameManager.company.currentGame.bugs = 0;
 		}
 	}
@@ -365,5 +370,34 @@
 			noBugsMode = true;
 		}
 	}
+	
+	//instant research
+	var old_increaseResearchProgress = GameManager.increaseResearchProgress;
+	var new_increaseResearchProgress = function(researcher, progress){
+		if(fastResearch){
+			var researchTemp = GameManager.currentResearches.first(function (c) {
+					return c.staffId === researcher.id
+				});
+			if (GameManager.currentFeature || GameManager.currentEngineDev)
+					GameManager.finishResearch(researcher, researchTemp);
+				else
+					researcher.endWorking();
+		}else{
+			old_increaseResearchProgress(researcher, progress);
+		}		
+		
+	}
+	GameManager.increaseResearchProgress = new_increaseResearchProgress
 
+	var setFastResearchEnabled = function(){
+		if(fastResearch){
+			var div = $("#CheatContainer");
+			div.find("#setFastResearchModeEnabled").html("Activate Fast Research Mode");
+			fastResearch = false;
+		}else{
+			var div = $("#CheatContainer");
+			div.find("#setFastResearchModeEnabled").html("Deactivate Fast Research Mode");
+			fastResearch = true;
+		}
+	}
 })();

@@ -42,8 +42,14 @@ New Features:
 
 version 0.1.9
 New Features:
-    - Added A No Bugs Mod (No bugs during game creation)
+    - Added A No Bugs Mode (No bugs during game creation)
 	- Add All Topics (Research All Topics)
+	
+version 0.2.0
+BugFixes:
+	- Fixed a problem with the No Bugs Mode
+New Features:
+    - Added Fast Research/Training Mode (Research/Training is almost instant)
 	
 	
 How to add CheatMod to your Game Dev Tycoon:
