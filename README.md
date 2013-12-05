@@ -49,10 +49,18 @@ version 0.2.0
 BugFixes:
 	- Fixed a problem with the No Bugs Mode
 New Features:
-    - Added Fast Research/Training Mode (Research/Training is almost instant)
+    - Added Fast Research Mode (Research is almost instant)
 	
 version 0.2.1
-	- Female staff members added tot 1337 dreamTeam.
+	- Female staff members added tot 1337 dreamTeam.	
+	
+version 0.2.2
+	- Fixed bug in Fast Reseach Mode, Training staff now works again.
+	- Added Feature to give yourself Pro developing skills.
+	- Added Feature to create Random strong trends!
+	- Random 11 out of 10 scores now possible in "Always perfect games mode".
+	- Add hype by 10 , 50 and 100
+	- Add Fans by 1M , 10M and 100M
 	
 How to add CheatMod to your Game Dev Tycoon:
 

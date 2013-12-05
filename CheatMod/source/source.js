@@ -60,6 +60,17 @@
 		
 	}
 	
+	function createProDeveloper(){
+		var character = GameManager.company.staff[0];
+        character.designFactor= 2;
+        character.technologyFactor= 2;
+        character.speedFactor= 2;
+		character.qualityFactor= 1;
+        character.experience= 10000;
+        character.researchFactor= 2;
+        character.efficiency= 1;
+	}
+	
 	function moveToLevel4(){
 	
 		if(GameManager.company.gameLog.length == 0){
@@ -150,12 +161,12 @@
 		VisualsManager.researchPoints.updatePoints(GameManager.company.researchPoints); 
 	}
 	
-	function addFans(){
-		GameManager.company.fans += 1000000;
+	function addFans(fans){
+		GameManager.company.fans += fans;
 	}	
 	
-	function addHype(){
-		GameManager.company.adjustHype(100);
+	function addHype(hype){
+		GameManager.company.adjustHype(hype);
 	}	
 	
 	function addAAAResearch(){
@@ -181,10 +192,21 @@
 	div.append('<div id="money1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 142px;" >Add 1M</div>');
 	div.append('<div id="money10M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 10M</div>');
 	div.append('<div id="money100M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 100M</div>');
+		
+	div.append('<div id="fanslbl" style="margin-left:50px;width: 450px;" >Add Fans</div>');
+	div.append('<div id="fans1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 142px;" >Add 1M</div>');
+	div.append('<div id="fans10M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 10M</div>');
+	div.append('<div id="fans100M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 100M</div>');
+	
+	div.append('<div id="hypelbl" style="margin-left:50px;width: 450px;" >Add Hype</div>');
+	div.append('<div id="hype10" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 142px;" >Add 10</div>');
+	div.append('<div id="hype50" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 50</div>');
+	div.append('<div id="hype100" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 100</div>');
+	
 	div.append('<div id="research" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Research Points (100pt)</div>');
-	div.append('<div id="fans" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Fans (1M)</div>');
-	div.append('<div id="hype" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Hype (100pt)</div>');
 	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
+	div.append('<div id="proDeveloper" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Turn your player into a 1337 developer</div>');
+	div.append('<div id="generateNewTrend" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Generate random trend</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Final level</div>');
 	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add AAA games</div>');
 	div.append('<div id="addAllTopics" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add All Topics</div>');
@@ -214,11 +236,20 @@
             case "research":
                 addResearchPoints();
 				break;
-            case "fans":
-                addFans();
+            case "fans1M":
+                addFans(1000000);
+				break;
+            case "fans10M":
+                addFans(10000000);
+				break;
+            case "fans100M":
+                addFans(100000000);
 				break;
 			case "dreamteam":
                 addDreamTeam();
+				break;
+			case "proDeveloper":
+                createProDeveloper();
 				break;
 			case "moveToLvl4":
                 moveToLevel4();
@@ -232,8 +263,14 @@
 			case "removeNeedForVacationForStaff":
                 removeNeedForVacationForStaff();
 				break;
-			case "hype":
-                addHype();
+			case "hype10":
+                addHype(10);
+				break;
+			case "hype50":
+                addHype(50);
+				break;
+			case "hype100":
+                addHype(100);
 				break;
 			case "setPerfectScoreEnabled":
                 setPerfectScoreEnabled();
@@ -246,6 +283,9 @@
 				break;
 			case "setFastResearchModeEnabled":
                 setFastResearchEnabled();
+				break;			
+			case "generateNewTrend":
+                generateNewTrend();
 				break;
             default:
                 return;
@@ -316,19 +356,31 @@
 	
 	
 	//always perfect scores easy way
-	var getPerfectScoreComment = function(){
-		return ["A masterpiece.".localize(), "Best of its kind.".localize(), "Truly great.".localize(), "Everyone loves it!".localize(), "Must have!".localize(), "Outstanding achievement.".localize(), "Awesome!".localize(), "My new favorite!".localize()].pickRandom();
+	var getPerfectScoreComment = function(hasPerfectScore){
+		if(hasPerfectScore == false){
+			return ["A masterpiece.".localize(), "Best of its kind.".localize(), "Truly great.".localize(), "Everyone loves it!".localize(), "Must have!".localize(), "Outstanding achievement.".localize(), "Awesome!".localize(), "My new favorite!".localize()].pickRandom();
+		}else{
+			return ["11 out of 10. Game of the year, any year!".localize(), "11 out of 10. Nuff said.".localize(), "11 out of 10. A exceptional score for an exceptional game.".localize(), "11 out of 10. Rules don't apply to this outstanding game.".localize()].pickRandom();
+		}
 	}
 	
 	var setPerfectScores = function (e) {
 		e.reviews[0].score = 10;
-		e.reviews[0].message = getPerfectScoreComment;
+		e.reviews[0].message = getPerfectScoreComment(false);
 		e.reviews[1].score = 10;
-		e.reviews[1].message = getPerfectScoreComment;
+		e.reviews[1].message = getPerfectScoreComment(false);
 		e.reviews[2].score = 10;
-		e.reviews[2].message = getPerfectScoreComment;
-		e.reviews[3].score = 10;
-		e.reviews[3].message = getPerfectScoreComment;
+		e.reviews[2].message = getPerfectScoreComment(false);
+		
+		var r = GameManager.company.getRandom();
+		if (r >= 0.7) {
+			e.reviews[3].score = 11;
+			e.reviews[3].message = getPerfectScoreComment(true);
+		}else{
+			e.reviews[3].score = 10;
+			e.reviews[3].message = getPerfectScoreComment(false);
+		}
+
 		e.game.score = 10;
 	};
 	
@@ -374,18 +426,21 @@
 	//instant research
 	var old_increaseResearchProgress = GameManager.increaseResearchProgress;
 	var new_increaseResearchProgress = function(researcher, progress){
-		if(fastResearch){
-			var researchTemp = GameManager.currentResearches.first(function (c) {
+		if(typeof researcher.currentResearch != 'undefined' && researcher.currentResearch != null && researcher.currentResearch.type == "training"){
+			old_increaseResearchProgress(researcher, progress);
+		}else{
+			if(fastResearch){
+				var researchTemp = GameManager.currentResearches.first(function (c) {
 					return c.staffId === researcher.id
 				});
-			if (GameManager.currentFeature || GameManager.currentEngineDev)
-					GameManager.finishResearch(researcher, researchTemp);
-				else
-					researcher.endWorking();
-		}else{
-			old_increaseResearchProgress(researcher, progress);
-		}		
-		
+				if (GameManager.currentFeature || GameManager.currentEngineDev)
+						GameManager.finishResearch(researcher, researchTemp);
+					else
+						researcher.endWorking();
+			}else{
+				old_increaseResearchProgress(researcher, progress);
+			}		
+		}
 	}
 	GameManager.increaseResearchProgress = new_increaseResearchProgress
 
@@ -400,4 +455,25 @@
 			fastResearch = true;
 		}
 	}
+	
+	//generate trend
+	var generateNewTrend = function () {
+		if (GameManager.company.currentLevel == 1){
+			GameManager.company.notifications.push(new Notification("CheatMod", "Can not generate a trend in the first level(garage). Please move to the next level."));
+			return;
+		}
+
+		if(typeof GameManager.company.flags.trends != 'undefined' && GameManager.company.flags.trends != null){
+			GameManager.company.flags.trends = {};
+		}
+		GameManager.company.flags.trends.currentTrend = null;
+
+		do
+		{
+			GameManager.company.flags.trends.expireBy = GameManager.gameTime-1;
+			GameTrends.updateTrends(GameManager.company);
+		}
+		while (GameManager.company.flags.trends.currentTrend == null);
+	};
+
 })();

@@ -1,5 +1,6 @@
 ﻿(function () {
 	var ready = function () {
+		
 	};
 
 	var error = function () {
