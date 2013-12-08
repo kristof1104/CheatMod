@@ -61,6 +61,9 @@ version 0.2.2
 	- Random 11 out of 10 scores now possible in "Always perfect games mode".
 	- Add hype by 10 , 50 and 100
 	- Add Fans by 1M , 10M and 100M
+version 0.2.3
+	- Fixed bug in Add DreamTeam, (sometimes in level 4 it wouldn't add the last 2 staff members)
+
 	
 How to add CheatMod to your Game Dev Tycoon:
 

@@ -14,6 +14,9 @@
 	}
 	
 	function addDreamTeam(){
+		if(GameManager.company.currentLevel == 4)
+			GameManager.company.maxStaff = 7;
+	
 		for (var i=1;i<GameManager.company.maxStaff;i++){
 		var skipCharacter = false;
 			for(var j=0;j<GameManager.company.staff.length;j++){
