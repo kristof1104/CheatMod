@@ -63,6 +63,9 @@ version 0.2.2
 	- Add Fans by 1M , 10M and 100M
 version 0.2.3
 	- Fixed bug in Add DreamTeam, (sometimes in level 4 it wouldn't add the last 2 staff members)
+version 0.3.0
+	- Added Feature ,Users can now add Tech levels ( For example Graphics V3 lvl 15 ..)
+	- Added Feature to allow users to add Design & Tech points to a game during game development
 
 	
 How to add CheatMod to your Game Dev Tycoon:

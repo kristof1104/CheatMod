@@ -218,7 +218,12 @@
 	div.append('<div id="setNoBugsModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate No Bugs Mode</div>');
 	div.append('<div id="setFastResearchModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Fast Research Mode</div>');
 	
-	div.append('<div id="cheatmodtop" class="windowTitle smallerWindowTitle">Experimental!</div>');
+		div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">TechLevels</div>');
+	div.append('<div id="cheatmodTechLevels"></div>');
+	
+	
+
+	div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">Experimental!</div>');
 	div.append('<div style="margin-left:50px;width: 450px">Move through time, only use this for mod development/testing!(Moving back in time can add double platforms, moving in the future should work fine!</div>');
 	div.append('<div id="cheatmod_date" style="text-align:center;margin-left:50px;width: 450px"></div>');
 	div.append('<div class="volumeSlider"></div>');
@@ -324,13 +329,19 @@
                     Sound.click();
 					GameManager.resume(true);
 					
+					generateTechLevelScreen();	
+		
 						 var div = $("#CheatContainer");
 						 
 						 div.scrollTop()
 						 
 						 div.gdDialog({
 							popout: !0,
-							close: !0
+							close: !0,
+							onClose : function () {
+								var div = $("#cheatmodTechLevels");
+								div.empty();
+							}
 						})
                 }
             })
@@ -350,6 +361,8 @@
                 var c = b.value;
                 setDate(c);
             }
+			
+			
         });
 		setDate(GameManager.company.currentWeek);
 			
@@ -477,6 +490,146 @@
 			GameTrends.updateTrends(GameManager.company);
 		}
 		while (GameManager.company.flags.trends.currentTrend == null);
-	};
+	}
+	
+	//techlevels
+	var xpItems = [];
+	var generateTechLevelScreen = function () {
+		xpItems = [];
+		var game = GameManager.company.gameLog.last();
+		
+		if(typeof game == 'undefined' || game == null){
+			var div = $("#cheatmodTechLevels");
+			div.append('Requirement: Need at least 1 released game');
+			return;
+		}
+		
+		var selectedGameFeatures = game.features;
+		for (var i = 0; i < game.featureLog.length; i++) {
+			var mission = game.featureLog[i];
+			if (mission.missionType != "mission")
+				continue;
+				
+			var feature = General.getMission(mission.id);
 
+			var gain = 0;
+			var item = {
+				originalItem : feature,
+				name : feature.name,
+				level : LevelCalculator.getLevel(feature.experience),
+				progress : LevelCalculator.getProgressToNextLevel(feature.experience),
+				xpGain : gain,
+				progressColor : "orange",
+				progressGainColor : "#FFC456"
+			};
+			xpItems.push(item);	
+		}
+		
+		var allFeatures = GameManager.company.features;
+		for (var i = 0; i < allFeatures.length; i++) {
+			var feature = allFeatures[i];
+			if (!feature.showXPGain)
+				continue;
+
+			var gain = 0;
+			var item = {
+				originalItem : feature,
+				name : feature.name,
+				level : LevelCalculator.getLevel(feature.experience),
+				progress : LevelCalculator.getProgressToNextLevel(feature.experience),
+				xpGain : gain,
+				progressColor : "orange",
+				progressGainColor : "#FFC456"
+			};
+			xpItems.push(item);
+		}
+		
+		var div = $("#cheatmodTechLevels");
+		div.empty()
+		var featureElementTemplate = $(".releaseGameFeatureTemplate");
+		for (var i = 0; i < xpItems.length; i++) {
+			var element = featureElementTemplate.clone();
+			
+			div.append(element);
+			element.append('<div id="featureTechLvl" class="selectorButton whiteButton" onclick="CheatModKristof1104.addTechLevel({0})" style="display:inline-block;position: relative;margin: 0px;top:3px;line-height: 20px;height:22px;width: 22px;" >+</div>'.format(i));
+
+			element.css("font-size", 12 + "pt");
+
+			var item = xpItems[i];
+			(function (element, item) {
+				element.find(".featureName").text(item.name);
+				element.find(".featureLevel").text("Lvl. ".localize() + item.level);
+				var featureLevelUp = element.find(".featureLevelUp");
+				featureLevelUp.hide();
+				element.find(".featureProgress").css({
+					width : item.progress - 1 + "%"
+				}).css({
+					"background-color" : item.progressColor
+				});
+				var featureGain =
+					element.find(".featureProgressGain").css({
+						"background-color" : item.progressGainColor
+					});
+				featureGain["css_width_percent"] = 0;
+				var featureGainCaption = element.find(".featureGainCaption");
+				featureGainCaption["klug_number_int_text"] = 0;
+				
+			})(element, item)
+		}
+	}
+	
+	CheatModKristof1104.addTechLevel = function(i){
+		var feature = xpItems[i];
+		var xpNeeded = LevelCalculator.getXpToNextLevel(feature.originalItem.experience);
+		var lvl = LevelCalculator.getLevel(feature.originalItem.experience);
+		var baseXp = LevelCalculator.getXpForLevel(lvl);
+		xpNeeded -= baseXp;
+		feature.originalItem.experience += xpNeeded;
+		generateTechLevelScreen();
+	}
+
+	//Add Tech and design points during game dev
+	CheatModKristof1104.addTechAndDesignPointsButtons = function(){
+		var div = $("#canvasContainer");
+		var designButton = $('<div id="cheatModDesignPoints" class="selectorButton " style="background-color: orange;position:absolute;line-height: 25px;height:30px;width: 30px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
+		var techButton = $('<div id="cheatModTechPoints" class="selectorButton " style="background-color: deepskyblue;position:absolute;line-height: 25px;height:30px;width: 30px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
+		div.append(designButton);
+		div.append(techButton);
+		$("#cheatModDesignPoints").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.designPoints.x +6);
+		$("#cheatModDesignPoints").css("top",VisualsManager.gameStatusBar.y + VisualsManager.gameStatusBar.designPoints.y + 82);
+		$("#cheatModDesignPoints").click (function () {
+				CheatModKristof1104.addTechAndDesignPoints(true);
+				return false;
+		});
+		$("#cheatModTechPoints").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.technologyPoints.x + 6);
+		$("#cheatModTechPoints").css("top",VisualsManager.gameStatusBar.y + VisualsManager.gameStatusBar.technologyPoints.y + 82);
+		$("#cheatModTechPoints").click (function () {
+				CheatModKristof1104.addTechAndDesignPoints(false);
+				return false;
+		});
+	}	
+	
+	CheatModKristof1104.addTechAndDesignPoints = function(design){
+		if(!GameManager.company.isCurrentlyDevelopingGame())
+			return;
+		
+		var game = GameManager.company.currentGame;
+		
+		if(design){
+			game.designPoints += 10;
+		}else{
+			game.technologyPoints += 10;
+		}
+		VisualsManager.updatePoints();
+	}
+	
+	var designAndTechAdded = false;
+	var initTechAndDesignButtons = function(data){
+		if(designAndTechAdded == false){
+			CheatModKristof1104.addTechAndDesignPointsButtons();	
+			designAndTechAdded = true;
+		}
+	}
+	GDT.on(GDT.eventKeys.gameplay.weekProceeded,initTechAndDesignButtons);
+	
 })();
