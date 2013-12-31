@@ -37,8 +37,62 @@
                     tF: 2,
                     speedF: 2,
                     qualityF: 1,
-                    experience: 10000,
+                    experience: LevelCalculator.getXpForLevel(10),
                     researchF: 2,
+                    salary: 1,
+                    efficiency: 1,
+                    slot: i,
+                    sex: ["male", "female"].pickRandom()
+					});
+				
+					GameManager.setBodyAndHead(character);
+					character.flags.hiredTimestamp = GameManager.gameTime;
+					character.flags.nextVacation = GameManager.gameTime + 48E3 * GameManager.SECONDS_PER_WEEK;
+					character.flags.workload = 0;
+					character.maxBoostLevel = 3;
+					character.boostLevel = 0;
+					character.boostRechargeProgress = 1;
+					UI._resetBoostUI();
+					GameManager.company.staff.push(character);
+					GameManager.uiSettings.findStaffData = null;
+					VisualsManager.reloadAllCharacters();
+					GameManager.company.staff[GameManager.company.staff.length - 1].startAnimations();
+					VisualsManager.addComputer(character);
+					VisualsManager.refreshHiringButtons();
+					VisualsManager.refreshTrainingOverlays();
+		}
+		
+		2 < GameManager.company.staff.length && GameManager.enableMediumContracts();
+		UI.reset();
+		
+	}	
+	
+	function addBTeam(){
+		if(GameManager.company.currentLevel == 4)
+			GameManager.company.maxStaff = 7;
+	
+		for (var i=1;i<GameManager.company.maxStaff;i++){
+		var skipCharacter = false;
+			for(var j=0;j<GameManager.company.staff.length;j++){
+				if(GameManager.company.staff[j].slot == i){
+					skipCharacter = true;
+					break;
+				}
+			}
+			
+			if(skipCharacter){
+				continue;
+			}
+			
+			var character = new Character({
+                    id: GameManager.getGUID(),
+                    name: "B Cheater"+i,
+                    dF: 1.4,
+                    tF: 1.4,
+                    speedF: 1.4,
+                    qualityF: 1.4,
+                    experience: 700,
+                    researchF: 1.4,
                     salary: 1,
                     efficiency: 1,
                     slot: i,
@@ -86,7 +140,7 @@
 			//add at least 1 staff member & at least 1 game
 			if(GameManager.company.staff.length<2){
 				GameManager.company.maxStaff = 7;
-				//addDreamTeam();
+				
 				var character = new Character({
                     id: GameManager.getGUID(),name: "Cheater1",dF: 2,
                     tF: 2,speedF: 2,qualityF: 1,experience: 10000,
@@ -181,6 +235,12 @@
 		if(-1 == GameManager.company.researchCompleted.indexOf(Research.AAA)){
 			GameManager.company.researchCompleted.push(Research.AAA);
 		}
+	}		
+	
+	function addSequelResearch(){
+		if(-1 == GameManager.company.researchCompleted.indexOf(Research.Sequels)){
+			GameManager.company.researchCompleted.push(Research.Sequels);
+		}
 	}	
 	
 	function addAllTopics(){
@@ -208,10 +268,12 @@
 	
 	div.append('<div id="research" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px;">Add Research Points (100pt)</div>');
 	div.append('<div id="dreamteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;height: 100px;width: 450px">Fill open Team positions with 1337 Teammembers</div>');
+	div.append('<div id="bteam" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;height: 100px;width: 450px">Fill open Team positions with B-Team Teammembers</div>');
 	div.append('<div id="proDeveloper" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Turn your player into a 1337 developer</div>');
 	div.append('<div id="generateNewTrend" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Generate random trend</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Final level</div>');
-	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add AAA games</div>');
+	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 219px">Add AAA games</div>');
+	div.append('<div id="SequelResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 219px">Add Sequel games</div>');
 	div.append('<div id="addAllTopics" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add All Topics</div>');
 	div.append('<div id="removeNeedForVacationForStaff" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Remove need for staff vacation</div>');
 	div.append('<div id="setPerfectScoreEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Always have PerfectScores</div>');
@@ -255,6 +317,9 @@
 				break;
 			case "dreamteam":
                 addDreamTeam();
+				break;			
+			case "bteam":
+                addBTeam();
 				break;
 			case "proDeveloper":
                 createProDeveloper();
@@ -264,6 +329,9 @@
 				break;
 			case "AAAResearch":
                 addAAAResearch();
+				break;			
+			case "SequelResearch":
+                addSequelResearch();
 				break;
 			case "moveToDate":
                 moveToDate();
@@ -322,50 +390,52 @@
 	
 	var original_showContextMenu = UI._showContextMenu;
 	var new_showContextMenu = function(b, c, d, h){
-		//add your custom code
-		c.push({
-                label: "CheatMode...",
-                action: function () {
-                    Sound.click();
-					GameManager.resume(true);
-					
-					generateTechLevelScreen();	
-		
-						 var div = $("#CheatContainer");
-						 
-						 div.scrollTop()
-						 
-						 div.gdDialog({
-							popout: !0,
-							close: !0,
-							onClose : function () {
-								var div = $("#cheatmodTechLevels");
-								div.empty();
-							}
-						})
-                }
-            })
+	
+		if(b == "competitorMod"){
+		}else{
+			c.push({
+					label: "CheatMode...",
+					action: function () {
+						Sound.click();
+						GameManager.resume(true);
+						
+						generateTechLevelScreen();	
+			
+							 var div = $("#CheatContainer");
+							 
+							 div.scrollTop()
+							 
+							 div.gdDialog({
+								popout: !0,
+								close: !0,
+								onClose : function () {
+									var div = $("#cheatmodTechLevels");
+									div.empty();
+								}
+							})
+					}
+				})
 
-			div.animate({
-				scrollTop: $("#cheatmodtop").offset().top
-			}, 2000);
-			
-			//test slider
-			div.find(".volumeSlider").slider({
-            min: 0,
-            max: 2160,
-            range: "min",
-            value: Math.floor(GameManager.company.currentWeek),
-            animate: !1,
-            slide: function (a, b) {
-                var c = b.value;
-                setDate(c);
-            }
-			
-			
-        });
-		setDate(GameManager.company.currentWeek);
-			
+				div.animate({
+					scrollTop: $("#cheatmodtop").offset().top
+				}, 2000);
+				
+				//test slider
+				div.find(".volumeSlider").slider({
+				min: 0,
+				max: 2160,
+				range: "min",
+				value: Math.floor(GameManager.company.currentWeek),
+				animate: !1,
+				slide: function (a, b) {
+					var c = b.value;
+					setDate(c);
+				}
+				
+				
+			});
+			setDate(GameManager.company.currentWeek);
+		}
 		original_showContextMenu(b, c, d, h);
 	};
 	UI._showContextMenu = new_showContextMenu
@@ -593,32 +663,64 @@
 		var div = $("#canvasContainer");
 		var designButton = $('<div id="cheatModDesignPoints" class="selectorButton " style="background-color: orange;position:absolute;line-height: 25px;height:30px;width: 30px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
 		var techButton = $('<div id="cheatModTechPoints" class="selectorButton " style="background-color: deepskyblue;position:absolute;line-height: 25px;height:30px;width: 30px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
+		var designButton100 = $('<div id="cheatModDesignPoints100" class="selectorButton " style="background-color: orange;position:absolute;line-height: 35px;height:40px;width: 40px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
+		var techButton100 = $('<div id="cheatModTechPoints100" class="selectorButton " style="background-color: deepskyblue;position:absolute;line-height: 35px;height:40px;width: 40px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
+		var research = $('<div id="cheatModAddResearch" class="selectorButton " style="background-color: #006AFF;color:white;position:absolute;line-height: 25px;height:30px;width: 30px; opacity=0;-webkit-border-radius: 999px;-moz-border-radius: 999px;border-radius: 999px;behavior: url(PIE.htc);">' + "+" + "</div>");
 		div.append(designButton);
-		div.append(techButton);
-		$("#cheatModDesignPoints").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.designPoints.x +6);
+		div.append(techButton);		
+		div.append(designButton100);
+		div.append(techButton100);
+		div.append(research);
+		$("#cheatModDesignPoints").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.designPoints.x -14);
 		$("#cheatModDesignPoints").css("top",VisualsManager.gameStatusBar.y + VisualsManager.gameStatusBar.designPoints.y + 82);
 		$("#cheatModDesignPoints").click (function () {
 				CheatModKristof1104.addTechAndDesignPoints(true);
 				return false;
 		});
-		$("#cheatModTechPoints").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.technologyPoints.x + 6);
+		$("#cheatModTechPoints").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.technologyPoints.x -14);
 		$("#cheatModTechPoints").css("top",VisualsManager.gameStatusBar.y + VisualsManager.gameStatusBar.technologyPoints.y + 82);
 		$("#cheatModTechPoints").click (function () {
 				CheatModKristof1104.addTechAndDesignPoints(false);
 				return false;
+		});		
+		$("#cheatModDesignPoints100").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.designPoints.x +16);
+		$("#cheatModDesignPoints100").css("top",VisualsManager.gameStatusBar.y + VisualsManager.gameStatusBar.designPoints.y + 82);
+		$("#cheatModDesignPoints100").click (function () {
+				CheatModKristof1104.addTechAndDesignPoints(true,true);
+				return false;
+		});
+		$("#cheatModTechPoints100").css("left",VisualsManager.gameStatusBar.x + VisualsManager.gameStatusBar.technologyPoints.x + 16);
+		$("#cheatModTechPoints100").css("top",VisualsManager.gameStatusBar.y + VisualsManager.gameStatusBar.technologyPoints.y + 82);
+		$("#cheatModTechPoints100").click (function () {
+				CheatModKristof1104.addTechAndDesignPoints(false,true);
+				return false;
+		});		
+		$("#cheatModAddResearch").css("left", VisualsManager.researchPoints.x );
+		$("#cheatModAddResearch").css("top", VisualsManager.researchPoints.y + 72);
+		$("#cheatModAddResearch").click (function () {
+				addResearchPoints();
+				return false;
 		});
 	}	
 	
-	CheatModKristof1104.addTechAndDesignPoints = function(design){
+	CheatModKristof1104.addTechAndDesignPoints = function(design,addBy100){
 		if(!GameManager.company.isCurrentlyDevelopingGame())
 			return;
 		
 		var game = GameManager.company.currentGame;
 		
-		if(design){
-			game.designPoints += 10;
+		if(typeof addBy100 != 'undefined' && addBy100 != null){
+			if(design){
+			game.designPoints += 100;
+			}else{
+				game.technologyPoints += 100;
+			}
 		}else{
-			game.technologyPoints += 10;
+			if(design){
+			game.designPoints += 10;
+			}else{
+				game.technologyPoints += 10;
+			}
 		}
 		VisualsManager.updatePoints();
 	}

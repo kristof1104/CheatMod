@@ -66,6 +66,12 @@ version 0.2.3
 version 0.3.0
 	- Added Feature ,Users can now add Tech levels ( For example Graphics V3 lvl 15 ..)
 	- Added Feature to allow users to add Design & Tech points to a game during game development
+version 1.0.0
+	- Added Feature To Add Sequel games
+	- Added Feature To allow users to add Design & Tech points by 10 or 100
+	- Added Feature To allow players to easily add ResearchPoints by a + button.
+	- Added Boost L2 for DreamTeam
+	- Added Feature To add a B-Team: stats are at 700 instead of 1000.
 
 	
 How to add CheatMod to your Game Dev Tycoon:
