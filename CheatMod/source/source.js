@@ -252,9 +252,10 @@
 	div.append('<div id="CheatContainer" class="windowBorder tallWindow" style="overflow:auto;display:none;"> <div id="cheatmodtop" class="windowTitle smallerWindowTitle">CheatMod</div>');
 	div = $("#CheatContainer");
 	div.append('<div id="moneylbl" style="margin-left:50px;width: 450px;" >Add Money</div>');
-	div.append('<div id="money1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 142px;" >Add 1M</div>');
-	div.append('<div id="money10M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 10M</div>');
-	div.append('<div id="money100M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 142px;" >Add 100M</div>');
+	div.append('<div id="money1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 104px;" >Add 1M</div>');
+	div.append('<div id="money10M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 103px;" >Add 10M</div>');
+	div.append('<div id="money100M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 103px;" >Add 100M</div>');
+	div.append('<div id="money1B" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 104px;" >Add 1B</div>');
 		
 	div.append('<div id="fanslbl" style="margin-left:50px;width: 450px;" >Add Fans</div>');
 	div.append('<div id="fans1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 142px;" >Add 1M</div>');
@@ -302,6 +303,9 @@
 				break;
             case "money100M":
                 addMoney(100000000);
+				break;
+            case "money1B":
+                addMoney(1000000000);
 				break;
             case "research":
                 addResearchPoints();
