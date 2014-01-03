@@ -4,6 +4,7 @@
 	var perfectScores = false;
 	var noBugsMode = false;
 	var fastResearch = false;
+	var showAllHints = false;
 
 	function removeNeedForVacationForStaff(){
 			for(var i=0;i<GameManager.company.staff.length;i++){
@@ -280,6 +281,7 @@
 	div.append('<div id="setPerfectScoreEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Always have PerfectScores</div>');
 	div.append('<div id="setNoBugsModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate No Bugs Mode</div>');
 	div.append('<div id="setFastResearchModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Fast Research Mode</div>');
+	div.append('<div id="showAllHintsEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate show all hints Mode</div>');
 	
 		div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">TechLevels</div>');
 	div.append('<div id="cheatmodTechLevels"></div>');
@@ -363,6 +365,9 @@
 				break;
 			case "setFastResearchModeEnabled":
                 setFastResearchEnabled();
+				break;				
+			case "showAllHintsEnabled":
+                setShowAllHintsEnabled();
 				break;			
 			case "generateNewTrend":
                 generateNewTrend();
@@ -737,5 +742,103 @@
 		}
 	}
 	GDT.on(GDT.eventKeys.gameplay.weekProceeded,initTechAndDesignButtons);
+	
+	
+	//knowledge
+	var old_hasComboKnowledge = Knowledge.hasComboKnowledge;
+	var new_hasComboKnowledge = function(company, game, source){
+		if(showAllHints){
+			return true;
+		}else{
+			old_hasComboKnowledge(company, game, source);
+		}		
+	}
+	Knowledge.hasComboKnowledge = new_hasComboKnowledge;	
+	
+	var old_hasTrainingKnowledge = Knowledge.hasTrainingKnowledge;
+	var new_hasTrainingKnowledge = function(training){
+		if(showAllHints){
+			return true;
+		}else{
+			old_hasTrainingKnowledge(training);
+		}		
+	}
+	Knowledge.hasTrainingKnowledge = new_hasTrainingKnowledge;		
+	
+	var old_hasMissionWeightingKnowledge = Knowledge.hasMissionWeightingKnowledge;
+	var new_hasMissionWeightingKnowledge = function(company, mission, game, ignoreTopic, source){
+		if(showAllHints){
+			return true;
+		}else{
+			old_hasMissionWeightingKnowledge(company, mission, game, ignoreTopic, source);
+		}		
+	}
+	Knowledge.hasMissionWeightingKnowledge = new_hasMissionWeightingKnowledge;	
+
+	var old_getPlatformGenreWeightingKnowledge = Knowledge.getPlatformGenreWeightingKnowledge;
+	var new_getPlatformGenreWeightingKnowledge = function(company, platform){
+		if(showAllHints){
+			var match = {id : platform.id};
+			match["genreWeightings"] = [0, 0, 0, 0, 0, 0];
+			match["genreWeightings"] = platform.genreWeightings
+			return match["genreWeightings"];
+		}else{
+			old_getPlatformGenreWeightingKnowledge(company, platform);
+		}		
+	}
+	Knowledge.getPlatformGenreWeightingKnowledge = new_getPlatformGenreWeightingKnowledge;
+	
+	var old_getPlatformAudienceWeightingKnowledge = Knowledge.getPlatformAudienceWeightingKnowledge;
+	var new_getPlatformAudienceWeightingKnowledge = function(company, platform){
+		if(showAllHints){
+			var match = {id : platform.id};
+			match["audienceWeightings"] = [0, 0, 0];
+			var weighting1 = Platforms.getAudienceWeighting([platform], "young", true);
+			var weighting2 = Platforms.getAudienceWeighting([platform], "everyone", true);
+			var weighting3 = Platforms.getAudienceWeighting([platform], "mature", true);
+
+			match["audienceWeightings"][0] = weighting1;
+			match["audienceWeightings"][1] = weighting2;
+			match["audienceWeightings"][2] = weighting3;
+			
+			return match["audienceWeightings"];
+		}else{
+			old_getPlatformAudienceWeightingKnowledge(company, platform);
+		}		
+	}
+	Knowledge.getPlatformAudienceWeightingKnowledge = new_getPlatformAudienceWeightingKnowledge;	
+
+	var old_getTopicAudienceWeightingKnowledge = Knowledge.getTopicAudienceWeightingKnowledge;
+	var new_getTopicAudienceWeightingKnowledge = function(company, topic, audience, target){
+		if(showAllHints){
+			var match = {id : topic.id};
+			match["audienceWeightings"] =[0, 0, 0];
+			var weighting1 = General.getAudienceWeighting(topic.audienceWeightings, "young");
+			var weighting2 = General.getAudienceWeighting(topic.audienceWeightings, "everyone");
+			var weighting3 = General.getAudienceWeighting(topic.audienceWeightings, "mature");
+
+			match["audienceWeightings"][0] = weighting1;
+			match["audienceWeightings"][1] = weighting2;
+			match["audienceWeightings"][2] = weighting3;
+			
+			return match["audienceWeightings"];
+		}else{
+			old_getTopicAudienceWeightingKnowledge(company, topic, audience, target);
+		}		
+	}
+	Knowledge.getTopicAudienceWeightingKnowledge = new_getTopicAudienceWeightingKnowledge;
+	
+
+	var setShowAllHintsEnabled = function(){
+		if(showAllHints){
+			var div = $("#CheatContainer");
+			div.find("#showAllHintsEnabled").html("Activate show all hints Mode");
+			showAllHints = false;
+		}else{
+			var div = $("#CheatContainer");
+			div.find("#showAllHintsEnabled").html("Deactivate show all hints Mode");
+			showAllHints = true;
+		}
+	}
 	
 })();

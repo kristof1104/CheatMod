@@ -74,6 +74,8 @@ version 1.0.0
 	- Added Feature To add a B-Team: stats are at 700 instead of 1000.
 version 1.0.1
 	- Added Feature To Add 1B Money
+version 1.0.2
+	- Added Feature To Show/Unlock All hints
 
 	
 How to add CheatMod to your Game Dev Tycoon:
