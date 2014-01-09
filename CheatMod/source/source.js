@@ -750,7 +750,7 @@
 		if(showAllHints){
 			return true;
 		}else{
-			old_hasComboKnowledge(company, game, source);
+			return old_hasComboKnowledge(company, game, source);
 		}		
 	}
 	Knowledge.hasComboKnowledge = new_hasComboKnowledge;	
@@ -760,7 +760,7 @@
 		if(showAllHints){
 			return true;
 		}else{
-			old_hasTrainingKnowledge(training);
+			return old_hasTrainingKnowledge(training);
 		}		
 	}
 	Knowledge.hasTrainingKnowledge = new_hasTrainingKnowledge;		
@@ -770,7 +770,7 @@
 		if(showAllHints){
 			return true;
 		}else{
-			old_hasMissionWeightingKnowledge(company, mission, game, ignoreTopic, source);
+			return old_hasMissionWeightingKnowledge(company, mission, game, ignoreTopic, source);
 		}		
 	}
 	Knowledge.hasMissionWeightingKnowledge = new_hasMissionWeightingKnowledge;	
@@ -783,7 +783,7 @@
 			match["genreWeightings"] = platform.genreWeightings
 			return match["genreWeightings"];
 		}else{
-			old_getPlatformGenreWeightingKnowledge(company, platform);
+			return old_getPlatformGenreWeightingKnowledge(company, platform);
 		}		
 	}
 	Knowledge.getPlatformGenreWeightingKnowledge = new_getPlatformGenreWeightingKnowledge;
@@ -803,7 +803,7 @@
 			
 			return match["audienceWeightings"];
 		}else{
-			old_getPlatformAudienceWeightingKnowledge(company, platform);
+			return old_getPlatformAudienceWeightingKnowledge(company, platform);
 		}		
 	}
 	Knowledge.getPlatformAudienceWeightingKnowledge = new_getPlatformAudienceWeightingKnowledge;	
@@ -823,7 +823,7 @@
 			
 			return match["audienceWeightings"];
 		}else{
-			old_getTopicAudienceWeightingKnowledge(company, topic, audience, target);
+			return old_getTopicAudienceWeightingKnowledge(company, topic, audience, target);
 		}		
 	}
 	Knowledge.getTopicAudienceWeightingKnowledge = new_getTopicAudienceWeightingKnowledge;
