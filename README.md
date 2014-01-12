@@ -78,6 +78,8 @@ version 1.0.2
 	- Added Feature To Show/Unlock All hints
 version 1.0.3
 	- Bugfix Show/Unlock All hints
+version 1.0.4
+	- Unlock Casual games & Sequels when starting new games
 
 	
 How to add CheatMod to your Game Dev Tycoon:

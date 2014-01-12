@@ -5,6 +5,14 @@
 	var noBugsMode = false;
 	var fastResearch = false;
 	var showAllHints = false;
+	
+	var oldSetupNewGame = GameManager._setupNewGame;
+	var newSetupNewGame = function(){
+		oldSetupNewGame();
+		GameManager.company.researchCompleted.push(Research.Sequels);
+		GameManager.company.researchCompleted.push(Research.CasualGames);
+	}
+	GameManager._setupNewGame = newSetupNewGame;
 
 	function removeNeedForVacationForStaff(){
 			for(var i=0;i<GameManager.company.staff.length;i++){
@@ -238,12 +246,6 @@
 		}
 	}		
 	
-	function addSequelResearch(){
-		if(-1 == GameManager.company.researchCompleted.indexOf(Research.Sequels)){
-			GameManager.company.researchCompleted.push(Research.Sequels);
-		}
-	}	
-	
 	function addAllTopics(){
 		GameManager.company.topics = [];
 		GameManager.company.topics = GameManager.company.topics.concat([],Topics.topics);
@@ -275,7 +277,6 @@
 	div.append('<div id="generateNewTrend" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Generate random trend</div>');
 	div.append('<div id="moveToLvl4" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Move To Final level</div>');
 	div.append('<div id="AAAResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 219px">Add AAA games</div>');
-	div.append('<div id="SequelResearch" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:0px;width: 219px">Add Sequel games</div>');
 	div.append('<div id="addAllTopics" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Add All Topics</div>');
 	div.append('<div id="removeNeedForVacationForStaff" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Remove need for staff vacation</div>');
 	div.append('<div id="setPerfectScoreEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Always have PerfectScores</div>');
@@ -283,7 +284,7 @@
 	div.append('<div id="setFastResearchModeEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate Fast Research Mode</div>');
 	div.append('<div id="showAllHintsEnabled" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="margin-left:50px;width: 450px">Activate show all hints Mode</div>');
 	
-		div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">TechLevels</div>');
+	div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">TechLevels</div>');
 	div.append('<div id="cheatmodTechLevels"></div>');
 	
 	
