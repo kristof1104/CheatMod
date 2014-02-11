@@ -220,6 +220,26 @@
 	}	
 	function addMoney(money){
 		GameManager.company.adjustCash(money,"cheat mode " + money / 1000000 + "M");
+	}	
+	
+	function setMoney(){
+		var money = $("#moneyField").val();
+		money = money.replace(/\./g,""); 
+		
+		if(isNaN(money))
+			return;
+	
+		GameManager.company.cash = parseInt(money);
+	}	
+	
+	function setFans(){
+		var fans = $("#fansField").val();
+		fans = fans.replace(/\./g,""); 
+		
+		if(isNaN(fans))
+			return;
+	
+		GameManager.company.fans = parseInt(fans);
 	}
 	
 	function addResearchPoints(){
@@ -252,7 +272,7 @@
 	}
 
 	var div = $("body");
-	div.append('<div id="CheatContainer" class="windowBorder tallWindow" style="overflow:auto;display:none;"> <div id="cheatmodtop" class="windowTitle smallerWindowTitle">CheatMod</div>');
+	div.append('<div id="CheatContainer" class="windowBorder tallWindow" style="z-index: 5400;overflow:auto;display:none;"> <div id="cheatmodtop" class="windowTitle smallerWindowTitle">CheatMod</div>');
 	div = $("#CheatContainer");
 	div.append('<div id="moneylbl" style="margin-left:50px;width: 450px;" >Add Money</div>');
 	div.append('<div id="money1M" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 104px;" >Add 1M</div>');
@@ -287,9 +307,15 @@
 	div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">TechLevels</div>');
 	div.append('<div id="cheatmodTechLevels"></div>');
 	
-	
+	div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">Modding</div><br>');
+	div.append('set cash value to: <input id="moneyField" type="text" maxlength="35" style="width:170px;font-size: 22pt"/> ');
+	div.append('<div id="setMoney" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 104px;" >SET</div>');
+	div.append('<br>');	
+	div.append('set fans value to: <input id="fansField" type="text" maxlength="35" style="width:170px;font-size: 22pt"/> ');
+	div.append('<div id="setFans" class="selectorButton whiteButton" onclick="UI.pickCheatClick(this)" style="display:inline-block;position: relative;margin-left:50px;width: 104px;" >SET</div>');
+	div.append('<br>');
 
-	div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">Experimental!</div>');
+	div.append('<div id="cheatmodLbl" class="windowTitle smallerWindowTitle">Experimental!</div><br>');
 	div.append('<div style="margin-left:50px;width: 450px">Move through time, only use this for mod development/testing!(Moving back in time can add double platforms, moving in the future should work fine!</div>');
 	div.append('<div id="cheatmod_date" style="text-align:center;margin-left:50px;width: 450px"></div>');
 	div.append('<div class="volumeSlider"></div>');
@@ -373,6 +399,12 @@
 			case "generateNewTrend":
                 generateNewTrend();
 				break;
+			case "setMoney":
+                setMoney();
+				break;
+			case "setFans":
+                setFans();
+				break;
             default:
                 return;
             }
@@ -410,25 +442,27 @@
 						GameManager.resume(true);
 						
 						generateTechLevelScreen();	
-			
-							 var div = $("#CheatContainer");
-							 
-							 div.scrollTop()
-							 
-							 div.gdDialog({
+						var div = $("#CheatContainer");
+						div.scrollTop()
+						$("#CheatContainer").css("z-index","5400");
+						div.gdDialog({
 								popout: !0,
 								close: !0,
 								onClose : function () {
 									var div = $("#cheatmodTechLevels");
 									div.empty();
 								}
-							})
+						})
 					}
 				})
 
 				div.animate({
 					scrollTop: $("#cheatmodtop").offset().top
 				}, 2000);
+				
+				//set current cash & fans textFields
+				div.find("#moneyField").val(UI.getLongNumberString(GameManager.company.cash));
+				div.find("#fansField").val(UI.getLongNumberString(GameManager.company.fans));
 				
 				//test slider
 				div.find(".volumeSlider").slider({
